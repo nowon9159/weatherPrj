@@ -30,6 +30,7 @@
       :items="weatherLocationItem"
       persistent-hint
       v-model="selectLocation"
+      v-bind="location"
     >
     </v-combobox>
   </v-container>
@@ -52,11 +53,11 @@ export default {
     return {
       exApiUrl:
         "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true&timezone=Asia%2FTokyo",
+      location: null,
       weather: null,
       latitude: 1,
       longitude: 2,
       timezone: null,
-      location: null,
       abc: null,
       weatherIcon: [
         { weather: "sunny", icon: "mdi-weather-sunny" },
@@ -101,17 +102,17 @@ export default {
     getLocation() {
       if (this.selectLocation != "") {
         if (this.selectLocation == "Seoul") {
-            loca = seoul
-          setLocationInfo(loca)
+          loca = seoul;
+          setLocationInfo(loca);
         } else if (this.selectLocation == "LosAngeles") {
-            loca = losAngeles
-          setLocationInfo(loca)
+          loca = losAngeles;
+          setLocationInfo(loca);
         } else if (this.selectLocation == "Chicago") {
-            loca = chicago
-          setLocationInfo(loca)
+          loca = chicago;
+          setLocationInfo(loca);
         } else if (this.selectLocation == "NewYork") {
-            loca = NewYork
-          setLocationInfo(loca)
+          loca = NewYork;
+          setLocationInfo(loca);
         }
       }
     },
