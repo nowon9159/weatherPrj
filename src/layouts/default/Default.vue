@@ -37,6 +37,11 @@ export default {
         link: "/",
       },
       {
+        title: "검색",
+        icon: "mdi-search-web",
+        link: "/search"
+      },
+      {
         title: "서울날씨 보기",
         icon: "mdi-weather-hail",
         link: "/weather",

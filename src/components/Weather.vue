@@ -24,47 +24,38 @@
   <v-card class="mx-auto" max-width="340">
     <v-card-text>{{ this.weather }}</v-card-text>
   </v-card>
-  <v-container>
-    <v-combobox
-      label="Search Location"
-      :items="weatherLocationItem"
-      persistent-hint
-      v-model="selectLocation"
-      v-bind="location"
-    >
-    </v-combobox>
-  </v-container>
-  <v-btn
-    class="mx-auto px-auto"
-    color="blue"
-    width="400px"
-    @click="getLocation"
-  >
-    검색하기
-  </v-btn>
-  <v-btn @click="debug"> 디버깅 </v-btn>
+  <v-card class="mx-auto" max-width="340" :elevation="6">
+    <v-card-text
+      >{{ getLatitude }}
+      {{ getLongitude }}
+      {{ getTimeZone }}
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
 import { Result } from "postcss";
+import { moveWeather } from "@/stores/Weather.js";
+import { mapState } from "pinia";
+
 const apiUrl = `https://api.open-meteo.com/v1/forecast`;
 export default {
   data: () => {
     return {
       exApiUrl:
         "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true&timezone=Asia%2FTokyo",
-      location: null,
+      location: "Seoul",
       weather: null,
-      latitude: 1,
-      longitude: 2,
+      latitude: null,
+      longitude:null,
       timezone: null,
+      selectedLocation: null,
       abc: null,
       weatherIcon: [
         { weather: "sunny", icon: "mdi-weather-sunny" },
         { weather: "rainy", icon: "mdi-weather-rainy" },
         { weather: "cloudy", icon: "mdi-weather-cloudy" },
       ],
-      selectLocation: null,
       weatherLocationItem: ["Seoul", "LosAngeles", "Chicago", "NewYork"],
       weatherLocation: {
         seoul: {
@@ -99,28 +90,28 @@ export default {
         this.weather = result.data;
       });
     },
-    getLocation() {
-      if (this.selectLocation != "") {
-        if (this.selectLocation == "Seoul") {
-          loca = seoul;
-          setLocationInfo(loca);
-        } else if (this.selectLocation == "LosAngeles") {
-          loca = losAngeles;
-          setLocationInfo(loca);
-        } else if (this.selectLocation == "Chicago") {
-          loca = chicago;
-          setLocationInfo(loca);
-        } else if (this.selectLocation == "NewYork") {
-          loca = NewYork;
-          setLocationInfo(loca);
+    setLocation() {
+      if (this.selectedLocation != "") {
+        if (this.selectedLocation == "Seoul") {
+          let loca = this.weatherLocation.seoul;
+          this.setLocationInfo(loca);
+        } else if (this.selectedLocation == "LosAngeles") {
+          let loca = this.weatherLocation.losAngeles;
+          this.setLocationInfo(loca);
+        } else if (this.selectedLocation == "Chicago") {
+          let loca = this.weatherLocation.chicago;
+          this.setLocationInfo(loca);
+        } else if (this.selectedLocation == "NewYork") {
+          let loca = this.weatherLocation.newYork;
+          this.setLocationInfo(loca);
         }
       }
     },
     setLocationInfo(loca) {
-      loca = loca;
-      this.latitude = this.weatherLocation.loca.latitude;
-      this.longitude = this.weatherLocation.loca.longitude;
-      this.timezone = this.weatherLocation.loca.timezone;
+      let location = loca;
+      this.latitude = location.latitude;
+      this.longitude = location.longitude;
+      this.timezone = location.timezone;
     },
     setApiUrl() {
       //https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true&timezone=Asia%2FTokyo
@@ -134,14 +125,16 @@ export default {
         this.timezone;
     },
     debug() {
-      console.log(this.longitude);
+      console.log("123 " + this.longitude);
       console.log(this.weatherLocation.seoul.longitude);
+      alert(this.longitude);
     },
   },
   computed: {
     iconCheck() {
       return this.weather.current_weather.weathercode;
     },
+    ...mapState(moveWeather, ["getLatitude", "getLongitude", "getTimeZone"]),
   },
 };
 </script>
