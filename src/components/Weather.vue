@@ -25,10 +25,8 @@
     <v-card-text>{{ this.weather }}</v-card-text>
   </v-card>
   <v-card class="mx-auto" max-width="340" :elevation="6">
-    <v-card-text
-      >{{ getLatitude }}
-      {{ getLongitude }}
-      {{ getTimeZone }}
+    <v-card-text>
+      {{ this.searchData }}
     </v-card-text>
   </v-card>
 </template>
@@ -47,35 +45,36 @@ export default {
       location: "Seoul",
       weather: null,
       latitude: null,
-      longitude:null,
+      longitude: null,
       timezone: null,
+      searchData: null,
       selectedLocation: null,
-      abc: null,
+      postApiUrl: null,
       weatherIcon: [
         { weather: "sunny", icon: "mdi-weather-sunny" },
         { weather: "rainy", icon: "mdi-weather-rainy" },
         { weather: "cloudy", icon: "mdi-weather-cloudy" },
       ],
-      weatherLocationItem: ["Seoul", "LosAngeles", "Chicago", "NewYork"],
+      weatherLocationItem: ["Seoul", "Denver", "Chicago", "NewYork"],
       weatherLocation: {
         seoul: {
           latitude: "52.52",
           longitude: "13.419998",
           timezone: "Asia/Tokyo",
         },
-        losAngeles: {
-          latitude: "52.52",
-          longitude: "13.419998",
-          timezone: "America/Los_Angeles",
+        denver: {
+          latitude: "39.74",
+          longitude: "-104.98",
+          timezone: "America/Denver",
         },
         chicago: {
-          latitude: "52.52",
-          longitude: "13.419998",
+          latitude: "41.85",
+          longitude: "-87.65",
           timezone: "America/Chicago",
         },
         newYork: {
-          latitude: "52.52",
-          longitude: "13.419998",
+          latitude: "40.71",
+          longitude: "-74.01",
           timezone: "America/New_York",
         },
       },
@@ -83,6 +82,7 @@ export default {
   },
   created() {
     this.getWeatherData();
+    this.setLocation();
   },
   methods: {
     getWeatherData() {
@@ -91,21 +91,25 @@ export default {
       });
     },
     setLocation() {
-      if (this.selectedLocation != "") {
-        if (this.selectedLocation == "Seoul") {
-          let loca = this.weatherLocation.seoul;
-          this.setLocationInfo(loca);
-        } else if (this.selectedLocation == "LosAngeles") {
-          let loca = this.weatherLocation.losAngeles;
-          this.setLocationInfo(loca);
-        } else if (this.selectedLocation == "Chicago") {
-          let loca = this.weatherLocation.chicago;
-          this.setLocationInfo(loca);
-        } else if (this.selectedLocation == "NewYork") {
-          let loca = this.weatherLocation.newYork;
-          this.setLocationInfo(loca);
-        }
+      const weatherLoca = this.weatherLocation;
+      if (this.getLocation == "Seoul") {
+        this.latitude = weatherLoca.seoul.latitude;
+        this.longitude = weatherLoca.seoul.longitude;
+        this.timezone = weatherLoca.seoul.timezone;
+      } else if (this.getLocation == "Denver") {
+        this.latitude = weatherLoca.denver.latitude;
+        this.longitude = weatherLoca.denver.longitude;
+        this.timezone = weatherLoca.denver.timezone;
+      } else if (this.getLocation == "Chicago") {
+        this.latitude = weatherLoca.chicago.latitude;
+        this.longitude = weatherLoca.chicago.longitude;
+        this.timezone = weatherLoca.chicago.timezone;
+      } else if (this.getLocation == "NewYork") {
+        this.latitude = weatherLoca.newYork.latitude;
+        this.longitude = weatherLoca.newYork.longitude;
+        this.timezone = weatherLoca.newYork.timezone;
       }
+      this.getSearchWeatherData();
     },
     setLocationInfo(loca) {
       let location = loca;
@@ -113,28 +117,26 @@ export default {
       this.longitude = location.longitude;
       this.timezone = location.timezone;
     },
-    setApiUrl() {
-      //https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true&timezone=Asia%2FTokyo
-      this.postApiUrl =
-        apiUrl +
-        "?latitude=" +
-        this.latitude +
-        "&longitude=" +
-        this.longitude +
-        "&current_weather=true&timezone=" +
-        this.timezone;
-    },
-    debug() {
-      console.log("123 " + this.longitude);
-      console.log(this.weatherLocation.seoul.longitude);
-      alert(this.longitude);
+    getSearchWeatherData() {
+      this.axios
+        .get(
+          `
+            https://api.open-meteo.com/v1/forecast?latitude=${this.latitude}&longitude=${this.longitude}&current_weather=true&timezone=${this.timezone}
+          `
+        )
+        .then((result) => {
+          this.searchData = result.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   computed: {
     iconCheck() {
       return this.weather.current_weather.weathercode;
     },
-    ...mapState(moveWeather, ["getLatitude", "getLongitude", "getTimeZone"]),
+    ...mapState(moveWeather, ["getLocation"]),
   },
 };
 </script>
