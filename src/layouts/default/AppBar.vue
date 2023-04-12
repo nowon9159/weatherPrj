@@ -10,14 +10,11 @@
 </template>
 
 <script>
-import { useUserStore } from '@/stores/User';
-import { mapState } from 'pinia';
+import login from '@/mixins/login';
 
 export default {
 
-  computed: {
-    ...mapState(useUserStore, ['getId','getPw'])
-  }
+  mixins: [login]
 
 }
 </script>

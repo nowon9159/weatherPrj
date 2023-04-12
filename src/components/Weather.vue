@@ -35,6 +35,8 @@
 import { Result } from "postcss";
 import { moveWeather } from "@/stores/Weather.js";
 import { mapState } from "pinia";
+import login from "@/mixins/login";
+
 
 const apiUrl = `https://api.open-meteo.com/v1/forecast`;
 export default {
@@ -138,5 +140,6 @@ export default {
     },
     ...mapState(moveWeather, ["getLocation"]),
   },
+  mixins: [login]
 };
 </script>

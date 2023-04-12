@@ -18,11 +18,17 @@
       검색하기
     </v-btn>
   </v-row>
+  <div>
+    {{ getId }}
+    {{ getPw }}
+  </div>
+  
 </template>
 
 <script>
 import { mapActions } from "pinia";
 import { moveWeather } from "@/stores/Weather";
+import login from "@/mixins/login";
 
 export default {
   data: () => {
@@ -46,6 +52,7 @@ export default {
         console.log(this.selectedLocation)
     },
   },
+  mixins: [login]
 };
 </script>
 
