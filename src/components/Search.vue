@@ -51,7 +51,7 @@ export default {
           url : "Asia%2FTokyo",
         }
       },
-      valueParam: this.
+      //valueParam: this.
     };
   },
   methods: {
