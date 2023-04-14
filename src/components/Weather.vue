@@ -21,14 +21,7 @@
       </v-row>
     </v-card-text>
   </v-card>
-  <v-card class="mx-auto" max-width="340">
-    <v-card-text>{{ this.weather }}</v-card-text>
-  </v-card>
-  <v-card class="mx-auto" max-width="340" :elevation="6">
-    <v-card-text>
-      {{ this.searchData }}
-    </v-card-text>
-  </v-card>
+  <div>{{ this.weather }}</div>
 </template>
 
 <script>

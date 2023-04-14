@@ -3,7 +3,6 @@
     <v-combobox
       label="Search Location"
       :items="weatherLocationItem"
-      persistent-hint
       v-model="selectedLocation"
     >
     </v-combobox>
@@ -22,37 +21,59 @@
     {{ getId }}
     {{ getPw }}
   </div>
-  
+  <div style="text-align: center; margin-top: 50px">
+    {{ this.selectedLocation }}
+  </div>
 </template>
 
 <script>
+const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m&current_weather=true&timezone=Europe%2FLondon`;
+
 import { mapActions } from "pinia";
-import { moveWeather } from "@/stores/Weather";
 import login from "@/mixins/login";
 
 export default {
   data: () => {
     return {
       selectedLocation: "Seoul",
-      weatherLocationItem: ["Seoul", "Denver", "Chicago", "NewYork"],
-      
+      getApiData: "",
+      weatherApiParam: {
+        losAngeles: {
+          url : "America%2FLos_Angeles",
+        },
+        chicago: {
+          url : "America%2FChicago",
+        },
+        newYork: {
+          url : "America%2FNew_York",
+        },
+        seoul: {
+          url : "Asia%2FTokyo",
+        }
+      },
+      valueParam: this.
     };
   },
   methods: {
     setLocation() {
-      this.setWeatherConfigOnclick()
-      this.movePageWeather()
+      this.setWeatherConfigOnclick();
+      //this.movePageWeather()
     },
     movePageWeather() {
-      this.$router.push({ path: 'weather'});
+      this.$router.push({ path: "weather" });
     },
     ...mapActions(moveWeather, ["setWeatherLocation"]),
     setWeatherConfigOnclick() {
-        this.setWeatherLocation(this.selectedLocation)
-        console.log(this.selectedLocation)
+      this.setWeatherLocation(this.selectedLocation);
+      console.log(this.selectedLocation);
+    },
+    getWeatherData() {
+      this.axios.get(this.exApiUrl).then((result) => {
+        this.weather = result.data;
+      });
     },
   },
-  mixins: [login]
+  mixins: [login],
 };
 </script>
 
